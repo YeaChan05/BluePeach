@@ -48,8 +48,4 @@ public class Swipe : MonoBehaviour
    public bool SwipeRight { get { return swipeRight; }}
    public bool SwipeUp { get { return swipeUp; }}
    public bool SwipeDown { get { return swipeDown; }}
-    public void TestHi(){
-        startTouch =swipeDelta =Vector2.zero;
-        
-    }
 }
