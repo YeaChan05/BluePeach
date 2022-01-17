@@ -1,51 +1,50 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class Swipe : MonoBehaviour
-{
-   private bool tap, swipeLeft, swipeRight,swipeUp, swipeDown;
-   private bool isDragging= false; 
-   private Vector2 startTouch,swipeDelta;
-    private void Update()
+  private Vector2 touchBeganPos;
+    private Vector2 touchEndedPos;
+    private Vector2 touchDif;
+    private float swipeSensitivity;
+    
+    //스와이프와 터치
+    public void Swipe1()
     {
-        tap=swipeLeft=swipeRight=swipeUp=swipeDown=false;
-
-        #region Moblie Inputs
-        if(Input.touches.Length>0)
+        if (Input.touchCount > 0)
         {
-            if(Input.touches[0].phase==TouchPhase.Began)
+            Touch touch = Input.GetTouch(0);
+
+
+            if (touch.phase == TouchPhase.Began)
             {
-                tap=true;
-                startTouch=Input.touches[0].position;
+                touchBeganPos = touch.position;
+            }
+            if (touch.phase == TouchPhase.Ended)
+            {
+                touchEndedPos = touch.position;
+                touchDif = (touchEndedPos - touchBeganPos);
+
+                //스와이프. 터치의 x이동거리나 y이동거리가 민감도보다 크면
+                if(Mathf.Abs(touchDif.y) > swipeSensitivity || Mathf.Abs(touchDif.x) > swipeSensitivity)
+                {
+                    if (touchDif.y > 0 && Mathf.Abs(touchDif.y) > Mathf.Abs(touchDif.x))
+                    {
+                        Debug.Log("up");
+                    }
+                    else if (touchDif.y < 0 && Mathf.Abs(touchDif.y) > Mathf.Abs(touchDif.x))
+                    {
+                        Debug.Log("down");
+                    }
+                    else if(touchDif.x > 0 && Mathf.Abs(touchDif.y) < Mathf.Abs(touchDif.x))
+                    {
+                        Debug.Log("right");
+                    }
+                    else if(touchDif.x < 0 && Mathf.Abs(touchDif.y) < Mathf.Abs(touchDif.x))
+                    {
+                        Debug.Log("Left");
+                    }
+                }
+                //터치.
+                else
+                {
+                    Debug.Log("touch");
+                }
             }
         }
-        else if(Input.touches[0].phase==TouchPhase.Ended || Input.touches[0].phase==TouchPhase.Canceled)
-        {
-            Reset();
-        }
-        #endregion
-        swipeDelta=Vector2.zero;
-        if(isDragging)
-        {
-            
-        }
     }
-
-    private void Reset()
-    {
-        startTouch =swipeDelta =Vector2.zero;
-    }
-
-
-    private void LateUpdate(){
-        // transfrom.position = Vector2.zero;
-        // Log.debug("hello world");
-    }
-    
-   public Vector2 SwipeDelta { get { return swipeDelta; }}
-   public bool SwipeLeft { get { return swipeLeft; }}
-   public bool SwipeRight { get { return swipeRight; }}
-   public bool SwipeUp { get { return swipeUp; }}
-   public bool SwipeDown { get { return swipeDown; }}
-}
